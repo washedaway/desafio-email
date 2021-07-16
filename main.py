@@ -17,11 +17,6 @@ sender = os.getenv('EMAIL_ADDRESS')
 passwd = os.getenv('EMAIL_PASSWORD')
 receiver = os.getenv('RECEIVER_ADDRESS')
 
-# Setup do servidor SMTP
-s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
-s.starttls()
-s.login(sender, passwd)
-
 # Função de análise dos recursos de hardware
 def specs():
 
@@ -44,19 +39,31 @@ def specs():
     pct_media = soma / len(pct_core_cpu)
     
     # Print dos recursos
-    print(f'[{date}] uso de cpu: {pct_media}%')
-    print(f'[{date}] quantidade de cores da cpu: {qtd_cores}')
-    print(f'[{date}] uso de memoria: {mem}%')
-    print(f'[{date}] uso de HD: {hd}%')
-    print(f'[{date}] uso de rede: {rede}')
+    #print(f'[{date}] uso de cpu: {pct_media}%')
+    #print(f'[{date}] quantidade de cores da cpu: {qtd_cores}')
+    #print(f'[{date}] uso de memoria: {mem}%')
+    #print(f'[{date}] uso de HD: {hd}%')
+    #print(f'[{date}] uso de rede: {rede}')
+
+    return f"""
+    [{date}] uso de cpu: {pct_media}%
+    [{date}] quantidade de cores da cpu: {qtd_cores}
+    [{date}] uso de memoria: {mem}%
+    [{date}] uso de HD: {hd}%
+    [{date}] uso de rede: {rede}
+    """
 
 def mailto():
-    msg = f"""From: Washington Barbosa <{sender}>
-        To: Gustavo Manchein <{receiver}>
-        Subject: Desafio
 
-        Se voce estiver lendo isso, e porque a aplicacao funcionou."""
-    
+    # Definição do corpo da mensagem
+    msg = specs() + "Se voce estiver lendo este email, a aplicacao funciona."
+
+    # Setup do servidor SMTP
+    s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
+    s.starttls()
+    s.login(sender, passwd)
+
+    # Manda o email
     s.sendmail(sender, receiver, msg)
 
 # Código para a aplicação rodar a cada 1h
@@ -68,4 +75,5 @@ for i in range(5):
     time.sleep(3600)
 
 # Executa a função de email
+print(specs())
 mailto()

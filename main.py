@@ -1,13 +1,26 @@
 # Importação de bibliotecas necessárias
 import email
 import smtplib
-import ssl
 import psutil
 import time
 import datetime
 import schedule
+import dotenv
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+# Declaração de variáveis
 i = 0
+sender = os.getenv('EMAIL_ADDRESS')
+passwd = os.getenv('EMAIL_PASSWORD')
+receiver = os.getenv('RECEIVER_ADDRESS')
+
+# Setup do servidor SMTP
+s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
+s.starttls()
+s.login(sender, passwd)
 
 # Função de análise dos recursos de hardware
 def specs():
@@ -26,26 +39,33 @@ def specs():
 
     # Cálculo de porcentagem de utilização da CPU
     for pct_individual in pct_core_cpu:
-        soma += pct_individual # for em python desconsidera [i]
+        soma += pct_individual # for loop em python desconsidera [i]
     
     pct_media = soma / len(pct_core_cpu)
     
     # Print dos recursos
     print(f'[{date}] uso de cpu: {pct_media}%')
-    print(f'[{date}] quantidade de cores cpu: {qtd_cores}')
-    print(f'[{date}] uso de memória: {mem}%')
+    print(f'[{date}] quantidade de cores da cpu: {qtd_cores}')
+    print(f'[{date}] uso de memoria: {mem}%')
     print(f'[{date}] uso de HD: {hd}%')
     print(f'[{date}] uso de rede: {rede}')
 
-# def mailto():
-#    as
+def mailto():
+    msg = f"""From: Washington Barbosa <{sender}>
+        To: Gustavo Manchein <{receiver}>
+        Subject: Desafio
+
+        Se voce estiver lendo isso, e porque a aplicacao funcionou."""
+    
+    s.sendmail(sender, receiver, msg)
 
 # Código para a aplicação rodar a cada 1h
-# schedule.every().hour.do(specs)
+schedule.every().hour.do(specs)
 
 # Breakpoint da função de repetição
-# for i in range(5):
-#    schedule.run_pending()
-#    time.sleep(1)
+for i in range(5):
+    schedule.run_pending()
+    time.sleep(3600)
 
-# mailto()
+# Executa a função de email
+mailto()

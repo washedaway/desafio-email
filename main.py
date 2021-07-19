@@ -17,9 +17,9 @@ sender = os.getenv('EMAIL_ADDRESS')
 passwd = os.getenv('EMAIL_PASSWORD')
 receiver = os.getenv('RECEIVER_ADDRESS')
 
+
 # Função de análise dos recursos de hardware
 def specs():
-
 
     # Declaração de variáveis locais
     date = datetime.datetime.now().isoformat()
@@ -34,16 +34,9 @@ def specs():
 
     # Cálculo de porcentagem de utilização da CPU
     for pct_individual in pct_core_cpu:
-        soma += pct_individual # for loop em python desconsidera [i]
-    
+        soma += pct_individual  # for loop em python desconsidera [i]
+
     pct_media = soma / len(pct_core_cpu)
-    
-    # Print dos recursos
-    #print(f'[{date}] uso de cpu: {pct_media}%')
-    #print(f'[{date}] quantidade de cores da cpu: {qtd_cores}')
-    #print(f'[{date}] uso de memoria: {mem}%')
-    #print(f'[{date}] uso de HD: {hd}%')
-    #print(f'[{date}] uso de rede: {rede}')
 
     return f"""
     [{date}] uso de cpu: {pct_media}%
@@ -52,6 +45,7 @@ def specs():
     [{date}] uso de HD: {hd}%
     [{date}] uso de rede: {rede}
     """
+
 
 def mailto():
 
